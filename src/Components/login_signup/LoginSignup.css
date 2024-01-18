@@ -1,0 +1,122 @@
+#root{
+    height: 100%;
+    width: 100%;
+    
+    background: linear-gradient(to right, rgb(198, 241, 237), rgb(151, 219, 219));
+}
+
+.container {
+    
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    /* width: 760px; */
+    width: 300;
+    margin-top: 200px;
+    background: #fff;
+    /* padding-bottom: 30px; */
+    border-radius: 230px;
+    margin-bottom: 200px;
+}
+
+.header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 9px;
+    width: 100%;
+    margin-top: 30px;
+}
+
+.text{
+    color: turquoise;
+    font-size: 60px;
+    font-weight: 700;
+}
+
+.underline{
+    width: 70px;
+    height: 6px;
+    background: turquoise;
+    border-radius: 9px;
+}
+
+.inputs{
+    margin-top: 55px;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    margin-bottom: 25px;
+}
+
+.input{
+    display: flex;
+    align-items: center;
+    margin: auto;
+    width: 480px;
+    height: 80px;
+    background: #caeaea;
+    border-radius: 19px;
+}
+
+.input img{
+    margin: 0px 30px;
+}
+
+.input input{
+    height: 50px;
+    width: 400px;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: #797979;
+    font-size: 19px;
+    padding: 5px 5px 5px 5px;
+}
+
+img {
+    display: flex;
+    gap: 0.5rem;
+    width: 2rem;
+    height: 2rem;
+}
+
+.forgot-password{
+    padding-left: 62px;
+    margin-top: 27px;
+    color: #797979;
+    font-size: 18px;
+}
+
+.forgot-password span{
+    color: rgb(151, 219, 219);
+    cursor: pointer;
+}
+
+.submit-container{
+    display: flex;
+    gap: 30px;
+    margin: 60px auto;
+}
+
+.submit{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 220px;
+    height: 55px;
+    color: #fff;
+    background: turquoise;
+    border-radius: 50px;
+    font-size: 19px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.gray{
+    background: #EAEAEA;
+    color: #797979;
+}

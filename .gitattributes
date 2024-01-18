@@ -2,3 +2,8 @@
 .gitignore -text
 README.md -text
 index.html -text
+src/App.css -text
+src/App.jsx -text
+src/index.css -text
+src/main.jsx -text
+vite.config.js -text
