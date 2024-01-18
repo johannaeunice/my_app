@@ -1,1 +1,4 @@
 *cjs -text
+.gitignore -text
+README.md -text
+index.html -text
