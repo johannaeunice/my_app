@@ -1,6 +1,6 @@
-import React from 'react'
+// import React from 'react'
 import { useState } from 'react'
-
+// import useWindowSize from '../../utils/useWindowSize'
 import './LoginSignup.css'
 import user_icon from '../Assets/person.jfif'
 import email_icon from '../Assets/email.jfif'
@@ -8,10 +8,14 @@ import password_icon from '../Assets/password.jfif'
 
 function Login_Signup() {
 
+  // const {width} = useWindowSize();
   const [action, setAction] = useState("Sign Up");
 
   return (
+    
     <div className='main'>
+      
+      <title>Sign Up | Login</title>
       <div className='container'>
         <div className="header">
           <div className="text">{action}</div>

@@ -85,10 +85,10 @@
     /* overflow: hidden; */
     height: 50px;
     width: 400px;
-    background: transparent;
+    background: #caeaea;
     border: none;
     outline: none;
-    color: #797979;
+    color: #7979796d;
     font-size: 19px;
     padding: 5px 5px 5px 5px;
 }
@@ -108,7 +108,7 @@ img {
 }
 
 .forgot-password span{
-    color: rgb(151, 219, 219);
+    color: rgb(13, 139, 139);
     cursor: pointer;
 }
 
