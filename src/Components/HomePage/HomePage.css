@@ -69,8 +69,8 @@ main button:hover {
     /* box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5); */
     position: relative;
     overflow: hidden;
-    min-width: 550px;
-    max-width: 100%;
+    min-width: 500px;
+    max-width: 100vw;
     min-height: 400px;
     justify-content: center;
     align-items: center;

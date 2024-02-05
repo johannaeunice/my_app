@@ -1,8 +1,19 @@
-// import React from 'react'
+import React, {Component} from 'react'
 import './HomePage.css';
+import history from '../history'
 import { HelmetProvider } from 'react-helmet-async';
+import {useNavigate, Link} from 'react-router-dom';
+import Login_Signup from '../login_signup/LoginSignup';
 
-const HomePage = () => {
+// export async function loader(){
+//     const contact = await ContactPage();
+//     return {contact};
+// }
+
+const HomePage = (props) => {
+    const navigate = useNavigate();
+    
+    
     return (
         <div className='container'>
 
@@ -18,15 +29,20 @@ const HomePage = () => {
                 {/* Top bar */}
                 <aside className='top'>
                     <div className="contact">
-                        <a href="#">
-                            <button className='btn'>
+                        
+                        
+                            <button className='btn'
+                                onClick={() => history.push('/ContactPage')}
+                            >
                                 <span className="material-symbols-outlined">
                                     contact_support
                                 </span>
                                 Contacts
                             </button>
-                        </a>
+                        
+                        
                     </div>
+                    {/* add toggle for light and dark modes */}
                 </aside>
 
                 {/* Main */}
@@ -37,8 +53,10 @@ const HomePage = () => {
                         <p>Get a whole new experience with our expense tracker!</p>
                         <p>Are you new here ?</p>
                         <p>If yes, click on the button below to get a full experience of our website!</p>
-                        <a href="#">
-                            <button className='btn'>
+                        <a href='/Login_Sinup'>
+                            <button className='btn'
+                            onClick={() => navigate('/Login_Signup')}
+                            >
                                 create account
                             </button>
                         </a>
@@ -58,6 +76,7 @@ const HomePage = () => {
                         </a>
                     </div>
                 </aside>
+                
             </div>
     )
 }

@@ -1,19 +1,19 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-// import { createRoot } from 'react-dom/client'
-// import { BrowserRouter } from 'react-router-dom'
-// import ContactPage from './pages/ContactPage/ContactPage'
-// import Login_Signup from './Components/login_signup/LoginSignup'
-
-import HomePage from './pages/HomePage/HomePage'
+import * as React from 'react';
+import * as ReactDOM from 'react-dom/client';
+import { BrowserRouter as Router } from 'react-router-dom';
+// import HomePage from './Components/HomePage/HomePage';
+// import Paths from './Components/Routes';
+import Dashboard from './Components/Dashboard/Dashboard';
 import './index.css'
 
-// const root= createRoot(rootElement);
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
- 
-    {/* <Login_Signup/> */}
-    {/* <ContactPage/> */}
-    <HomePage/>
+    <Router>
+      <Dashboard/>
+      {/* <HomePage/> */}
+      {/* <Paths/> */}
+    </Router>
+    {/* <RouterProvider router={router}/> */}
+    
   </React.StrictMode>,
 )
