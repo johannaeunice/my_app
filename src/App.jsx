@@ -10,6 +10,7 @@ export default function App() {
   return (
     <div className='wrapper'>
       <h1>My Page</h1>
+      <h2>Routing in React trial #24</h2>
       
     <BrowserRouter>
     <nav>
