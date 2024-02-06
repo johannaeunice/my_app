@@ -8,7 +8,7 @@ import password_icon from '../icons/lock.png'
 import feedback_icon from '../icons/feedback.png'
 import contact_icon from '../icons/contact_support.png'
 
-function Login_Signup() {
+function LoginSignup() {
 
   // const {width} = useWindowSize();
   const [action, setAction] = useState("Sign Up");
@@ -93,4 +93,4 @@ function Login_Signup() {
   )
 }
 
-export default Login_Signup;
+export default LoginSignup;

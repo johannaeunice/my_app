@@ -1,60 +1,27 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap');
+.form-control-primary {
+    margin: 10px;
+    opacity: 0.2;
+    border-radius: 2px;
+  }
 
-#root{
-    box-sizing: border-box;
-    background: linear-gradient(to right bottom, rgb(81, 220, 118), rgb(54, 24, 206));
-    font-family: 'Montserrat', sans-serif;
-    
-    justify-content: center;
-    /* display: flex;
-    flex-direction: column; */
-    /* margin: 0; */
-    width: 100%;
-    height: 100%;
-}
-
-.dashboard{
-    justify-content: center;
-    background: whitesmoke;
-    margin-left: 20px;
-    margin-right: 20px;
-}
-
-.dashboard img{
-    width: 2rem;
-    height: 2rem;
-}
-
-.top-title .left img{
-    width: 3.3rem;
-    height: 3.1rem;
-}
-
-.container button{
-    background: transparent;
-    border: none;
-}
-
-.container .top-title  {
-    display: flex;
-    margin-top: 0;
-
-    background: whitesmoke;
-}
-
-.container .aside-left{
-    background: whitesmoke;
-    display: flex;
-    margin-top: 80px;
-    margin-left: 20px;
-    margin-right: 20px;
-    flex-direction: column;
-    background: whitesmoke;
-    width: 30vw;
-    height: 100%;
-}
-
-.container .left .top{
-    display: flex;
-    flex-direction: column;
-}
+  .sidebar {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    top: 0;
+    z-index: 100;
+    padding: 70px 0 0 10px;
+    border-right: 1px solid #d3d3d3;
+  }
+  
+  .left-sidebar {
+    position: sticky;
+    top:0;
+    height: 100%
+    /* height: calc(100vh - 70px) */
+  }
+  
+  .sidebar-nav li .nav-link {
+    color: #333;
+    font-weight: 500;
+  }

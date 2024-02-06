@@ -3,7 +3,7 @@ import './HomePage.css';
 import history from '../history'
 import { HelmetProvider } from 'react-helmet-async';
 import {useNavigate, Link} from 'react-router-dom';
-import Login_Signup from '../login_signup/LoginSignup';
+import Login_Signup from '../login_signup/Loginsignup';
 
 // export async function loader(){
 //     const contact = await ContactPage();
