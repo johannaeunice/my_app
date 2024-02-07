@@ -1,6 +1,5 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom/client';
-import { BrowserRouter as Router } from 'react-router-dom';
 // import Dashboard from './Components/Dashboard/Dashboard';
 import 'bootstrap/dist/css/bootstrap.min.css'
 import App from './App';
