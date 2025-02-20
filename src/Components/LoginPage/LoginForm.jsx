@@ -14,7 +14,7 @@ const LoginForm = () => {
           <form>
             <input type="email" placeholder="Email" required />
             <input type="password" placeholder="Password" required />
-            <button type="submit" className="btn-primary">Login</button>
+            <a href="/Home"><button type="submit" className="btn-primary">Login</button></a>
           </form>
           <div className="social-login">
             <button className="btn-social apple">Login with Apple</button>

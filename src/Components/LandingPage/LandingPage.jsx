@@ -9,7 +9,7 @@ function LandingPage(){
       <div className="hero-section">
         <h1>Welcome to Malingo</h1>
         <p>Find and join activities that match your interests.</p>
-        <a href="/signup" className="btn-primary">Get Started</a>
+        <a href="/Signup" className="btn-primary">Get Started</a>
       </div>
     </div>
   );

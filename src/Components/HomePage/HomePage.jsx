@@ -44,7 +44,7 @@ function HomePage() {
                 <div key={index} className="activity-card">
                   <h3>{activity.title}</h3>
                   <p>{activity.description}</p>
-                  <button className="btn-primary">Join</button>
+                  <button className="button-primary">Join</button>
                 </div>
               ))
             ) : (

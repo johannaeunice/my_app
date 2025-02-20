@@ -16,7 +16,7 @@ const SignUpForm = () => {
                 <input type="text" placeholder="Full Name" required />
                 <input type="email" placeholder="Email" required />
                 <input type="password" placeholder="Password" required />
-                <button type="submit" className="btn-primary">Submit</button>
+                <button type="submit" className="btn-primary">Create Account</button>
               </form>
               <div className="social-signup">
                 <button className="btn-social apple">Sign up with Apple</button>
