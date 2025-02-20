@@ -1,68 +1,79 @@
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #F5F5F5;
-  }
-  
-  .navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #2C3E50;
-    padding: 15px 30px;
-    color: white;
-  }
-  
-  .nav-links {
-    list-style: none;
-    display: flex;
-    gap: 20px;
-  }
-  
-  .nav-links a {
-    text-decoration: none;
-    color: white;
-  }
-  
-  .btn {
-    background-color: #E67E22;
-    padding: 10px 15px;
-    border-radius: 5px;
-    color: white;
-    text-decoration: none;
-  }
-  
-  .btn-outline {
-    border: 2px solid #E67E22;
-    padding: 8px 15px;
-    border-radius: 5px;
-    color: #E67E22;
-    text-decoration: none;
-  }
-  
-  .hero-section {
+.home-page {
+    background: #F5F5F5;
+    min-height: 100vh;
     text-align: center;
-    padding: 50px 20px;
   }
   
-  .hero-section h1 {
-    font-size: 2.5rem;
+  .home-container {
+    padding: 40px;
+  }
+  
+  .search-filter-container {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  
+  .search-bar {
+    width: 50%;
+    padding: 10px;
+    border: 1px solid #BDC3C7;
+    border-radius: 5px;
+  }
+  
+  .filter-dropdown {
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #BDC3C7;
+  }
+  
+  .activity-list {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  
+  .activity-card {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    width: 300px;
+    text-align: left;
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+  }
+  
+  .activity-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.2);
+  }
+  
+  .activity-card h3 {
     color: #2C3E50;
   }
   
-  .hero-section p {
-    font-size: 1.2rem;
+  .activity-card p {
     color: #7F8C8D;
   }
   
   .btn-primary {
-    display: inline-block;
+    display: block;
+    width: 100%;
+    padding: 10px;
     background-color: #E67E22;
-    padding: 12px 20px;
-    border-radius: 5px;
     color: white;
-    max-width: 250px;
-    text-decoration: none;
-    margin-top: 20px;
-  }
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background-color 0.3s ease-in-out, transform 0.2s ease-in-out, font-size 0.2s ease-in-out;
+}
+
+.btn-primary:hover {
+  background-color: #D35400;
+  transform: scale(1.05);
+  font-size: 1.1em;
+}
+  

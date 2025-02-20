@@ -1,9 +1,13 @@
 import React from 'react'
 import './SignUpForm.css'
+import NavBar from '../navBar/NavBar';
 
-function SignUpForm() {
+const SignUpForm = () => {
+    
     return (
-        <div className="signup-page">
+       <div>
+        <NavBar/>
+         <div className="signup-page">
           <div className="signup-container">
             <div className="form-section">
               <h2>Create an account</h2>
@@ -18,7 +22,7 @@ function SignUpForm() {
                 <button className="btn-social apple">Sign up with Apple</button>
                 <button className="btn-social google">Sign up with Google</button>
               </div>
-              <p className="login-link">Have an account? <a href="/login">Sign in</a></p>
+              <p className="login-link">Have an account? <a href="/Login">Sign in</a></p>
             </div>
             <div className="image-section">
               <div className="overlay-content">
@@ -28,7 +32,8 @@ function SignUpForm() {
             </div>
           </div>
         </div>
+       </div>
       );
 }
 
-export default SignUpForm
+export default SignUpForm;
