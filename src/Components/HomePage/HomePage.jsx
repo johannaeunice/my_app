@@ -4,10 +4,31 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import './HomePage.css'
 
+const ActivityDetails = ({ activity, onClose }) => {
+  return (
+    <div className="activity-details-overlay">
+    <div className="activity-details">
+      <span className="close-icon" onClick={onClose}>&times;</span>
+      <h2>{activity.title}</h2>
+      <p>{activity.description}</p>
+      <p><strong>Category:</strong> {activity.category}</p>
+      {activity.isUserCreated ? (
+        <>
+          <button className="btn-primary">Edit</button>
+          <button className="btn-danger">Delete</button>
+        </>
+      ) : (
+        <button className="btn-primary">Join</button>
+      )}
+    </div>
+  </div>
+  );
+};
 function HomePage() {
     const [searchQuery, setSearchQuery] = useState("");
-  const [categoryFilter, setCategoryFilter] = useState("All");
-  
+    const [categoryFilter, setCategoryFilter] = useState("All");
+    const [selectedActivity, setSelectedActivity] = useState(null);
+
     const [activities, setActivities] = useState([
       { id: 1, title: "Mountain Adventure", description: "Join us for an exciting Mountain climbing this weekend! We want to go to the famous Mt. Cameroon.", category: "Outdoor", isEditing: false },
       { id: 2, title: "Food Tasting Event", description: "Come explore amazing food with fellow food lovers!", category: "Food", isEditing: false },
@@ -17,6 +38,14 @@ function HomePage() {
    const [userActivities, setUserActivities] = useState([
         { id: 101, title: "Mama's Place", description: "There is a new restaurant at Molyko, called Mama's Place. Let's go and discover their dishes !", category: "Food", isEditing: false }
       ]);
+
+      const handleActivityClick = (activity) => {
+        setSelectedActivity(activity);
+      };
+    
+      const handleCloseDetails = () => {
+        setSelectedActivity(null);
+      };
 
     const filteredActivities = activities.filter(activity =>
         (categoryFilter === "All" || activity.category === categoryFilter) &&
@@ -70,10 +99,10 @@ function HomePage() {
           </div>
           <div className="activity-list">
           {filteredActivities.map((activity) => (
-            <div key={activity.id} className="activity-card">
+            <div key={activity.id} className="activity-card" onClick={() => handleActivityClick(activity)}>
               <h3>{activity.title}</h3>
               <p>{activity.description}</p>
-              <button className="btn-form">Join</button>
+              <button className="btn-form">More details</button>
             </div>
           ))}
         </div>
@@ -81,7 +110,7 @@ function HomePage() {
         <h1>My Activities</h1>
         <div className="activity-list">
           {filteredUserActivities.map((activity) => (
-            <div key={activity.id} className="activity-card">
+            <div key={activity.id} className="activity-card" onClick={() => handleActivityClick(activity)}>
               {activity.isEditing ? (
                 <>
                   <input 
@@ -107,6 +136,7 @@ function HomePage() {
           ))}
         </div>
       </div>
+      {selectedActivity && <ActivityDetails activity={selectedActivity} onClose={handleCloseDetails} />}
     </div>
     );
   };
