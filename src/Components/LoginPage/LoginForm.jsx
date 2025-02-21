@@ -1,5 +1,6 @@
 import React from "react";
-import "./LoginForm.css"; // Assure-toi de créer un fichier CSS dédié
+import { Link } from "react-router-dom";
+import "./LoginForm.css"; 
 import NavBar from "../navBar/NavBar";
 
 const LoginForm = () => {
@@ -14,13 +15,13 @@ const LoginForm = () => {
           <form>
             <input type="email" placeholder="Email" required />
             <input type="password" placeholder="Password" required />
-            <a href="/Home"><button type="submit" className="btn-primary">Login</button></a>
+            <Link to="/Home"><button type="submit" className="btn-primary">Login</button></Link>
           </form>
           <div className="social-login">
             <button className="btn-social apple">Login with Apple</button>
             <button className="btn-social google">Login with Google</button>
           </div>
-          <p className="signup-link">Don't have an account? <a href="/Signup">Sign up</a></p>
+          <p className="signup-link">Don't have an account? <Link to="/Signup">Sign up</Link></p>
         </div>
         <div className="image-section">
           <div className="overlay-content">

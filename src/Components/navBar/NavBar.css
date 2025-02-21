@@ -4,14 +4,24 @@ body {
     padding: 0;
     background-color: #F5F5F5;
   }
-  
+
+  .logo a{
+    text-decoration: none;
+    color: white;
+    font-size: large;
+  }
+
+  .logo a:hover{
+    color: #2C3E50;
+  }
+
   .navbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #2C3E50;
+    background-color: transparent;
     padding: 15px 30px;
-    color: white;
+    color: #2C3E50;
   }
   
   .nav-links {
@@ -20,16 +30,22 @@ body {
     gap: 20px;
   }
   
+  .links:hover{
+    color: white;
+    background-color: #E67E22;
+    padding: 10px 15px;
+    border-radius: 5px;
+  }
   .nav-links a {
     text-decoration: none;
-    color: white;
+    color: #2C3E50;
   }
   
   .btn {
     background-color: #E67E22;
     padding: 10px 15px;
     border-radius: 5px;
-    color: white;
+    color: #2C3E50;
     text-decoration: none;
   }
   
@@ -41,3 +57,15 @@ body {
     text-decoration: none;
   }
   
+  .btn:hover{
+    background-color: #2C3E50;
+    color: white;
+    transform: scale(1.05);
+    box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.2);
+  }
+  .btn-outline:hover{
+    background-color: #2C3E50;
+    color: white;
+    transform: scale(1.05);
+    box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.2);
+  }

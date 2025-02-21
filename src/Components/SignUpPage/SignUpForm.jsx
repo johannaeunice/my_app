@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom';
 import './SignUpForm.css'
 import NavBar from '../navBar/NavBar';
 
@@ -22,7 +23,7 @@ const SignUpForm = () => {
                 <button className="btn-social apple">Sign up with Apple</button>
                 <button className="btn-social google">Sign up with Google</button>
               </div>
-              <p className="login-link">Already have an account? <a href="/Login">Sign in</a></p>
+              <p className="login-link">Already have an account? <Link to="/Login">Sign in</Link></p>
             </div>
             <div className="image-section">
               <div className="overlay-content">

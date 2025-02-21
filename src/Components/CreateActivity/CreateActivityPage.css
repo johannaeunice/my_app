@@ -1,5 +1,11 @@
 .create-activity-page {
-    background: #F5F5F5;
+  background: rgb(0, 124, 195);
+  background: linear-gradient(
+    90deg,
+    rgba(0, 124, 195, 1) 0%,
+    rgba(244, 244, 244, 1) 50%,
+    rgba(255, 140, 0, 1) 100%
+  );
     min-height: 100vh;
     text-align: center;
     padding: 40px;

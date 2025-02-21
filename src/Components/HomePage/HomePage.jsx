@@ -1,6 +1,7 @@
 import React from 'react'
 import NavBar from '../navBar/NavBar';
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import './HomePage.css'
 
 function HomePage() {
@@ -8,7 +9,7 @@ function HomePage() {
   const [categoryFilter, setCategoryFilter] = useState("All");
   
     const [activities, setActivities] = useState([
-      { id: 1, title: "Mountain Adventure", description: "Join us for an exciting Mountain climbing this weekend! We want to go to the famous Mt. Cameroon", category: "Outdoor", isEditing: false },
+      { id: 1, title: "Mountain Adventure", description: "Join us for an exciting Mountain climbing this weekend! We want to go to the famous Mt. Cameroon.", category: "Outdoor", isEditing: false },
       { id: 2, title: "Food Tasting Event", description: "Come explore amazing food with fellow food lovers!", category: "Food", isEditing: false },
       { id: 3, title: "Limbe in Picture", description: "Capture the beauty of Limbe with our photography group.", category: "Creative", isEditing: false }
     ]);
