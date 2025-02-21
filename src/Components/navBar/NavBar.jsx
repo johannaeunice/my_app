@@ -9,8 +9,9 @@ const NavBar = () => {
           <p><Link to="/">Malingo</Link></p>
           </div>
         <ul className="nav-links">
-          <li><Link to="/about" className='links'>About</Link></li>
           <li><Link to="/contact" className='links'>Contact Us</Link></li>
+          <li><Link to="/about" className='links'>About Us</Link></li>
+          <li><Link to="/CreateActivity" className='links'>Create Activity</Link></li>
           <li><Link to="/Signup" className="btn">Sign Up</Link></li>
           <li><Link to="/Login" className="btn-outline">Login</Link></li>
         </ul>
