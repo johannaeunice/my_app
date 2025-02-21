@@ -11,7 +11,7 @@ const SignUpForm = () => {
           <div className="signup-container">
             <div className="form-section">
               <h2>Create an account</h2>
-              <p>Sign up and get 30-day free trial</p>
+              <p>Sign up now and meet people with the same interests !</p>
               <form>
                 <input type="text" placeholder="Full Name" required />
                 <input type="email" placeholder="Email" required />
@@ -22,7 +22,7 @@ const SignUpForm = () => {
                 <button className="btn-social apple">Sign up with Apple</button>
                 <button className="btn-social google">Sign up with Google</button>
               </div>
-              <p className="login-link">Have an account? <a href="/Login">Sign in</a></p>
+              <p className="login-link">Already have an account? <a href="/Login">Sign in</a></p>
             </div>
             <div className="image-section">
               <div className="overlay-content">

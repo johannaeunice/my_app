@@ -10,7 +10,7 @@ const LoginForm = () => {
       <div className="login-container">
         <div className="form-section">
           <h2>Welcome Back!</h2>
-          <p>Login to continue</p>
+          <p>Login to continue exploring !</p>
           <form>
             <input type="email" placeholder="Email" required />
             <input type="password" placeholder="Password" required />

@@ -57,6 +57,14 @@
   .activity-card p {
     color: #7F8C8D;
   }
+
+  .activity-card textarea, input{
+    width: 100%;
+    border-radius: 5px;
+    border-color: #2C3E50;
+    margin-bottom: 5px;
+    padding: 5px;
+  }
   
   .button-primary {
     display: block;
@@ -77,3 +85,20 @@
   font-size: 1.1em;
 }
   
+.btn-danger {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    background-color: #D9534F;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background-color 0.3s ease-in-out, transform 0.2s ease-in-out;
+  }
+  
+  .btn-danger:hover {
+    background-color: #C9302C;
+    transform: scale(1.05);
+  }
