@@ -1,96 +1,122 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react';
 import NavBar from '../navBar/NavBar';
-import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import './HomePage.css'
+import './HomePage.css';
+
+const formatDate = (dateString) => {
+  const options = { day: '2-digit', month: 'long', year: 'numeric' };
+  return new Date(dateString).toLocaleDateString('en-GB', options);
+};
 
 const ActivityDetails = ({ activity, onClose }) => {
   return (
     <div className="activity-details-overlay">
-    <div className="activity-details">
-      <span className="close-icon" onClick={onClose}>&times;</span>
-      <h2>{activity.title}</h2>
-      <p>{activity.description}</p>
-      <p><strong>Category:</strong> {activity.category}</p>
-      {activity.isUserCreated ? (
-        <>
-          <button className="btn-primary">Edit</button>
-          <button className="btn-danger">Delete</button>
-        </>
-      ) : (
-        <button className="btn-primary">Join</button>
-      )}
+      <div className="activity-details">
+        <span className="close-icon" onClick={onClose}>&times;</span>
+        {activity.ActivityPhoto && (
+          <img src={`https://rrn24.techchantier.site/malingo/public/storage/${activity.ActivityPhoto}`} alt={activity.title} className="activity-image" />
+        )}
+        <h2>{activity.title}</h2>
+        <p>{activity.description}</p>
+        <p><strong>Location:</strong> {activity.location}</p>
+        <p><strong>Date:</strong> {formatDate(activity.time)}</p>
+        <p><strong>Members:</strong> {activity.numberOfMembers} joined</p>
+        {activity.link && (
+          <p><strong>More Info:</strong> <a href={activity.link} target="_blank" rel="noopener noreferrer">Click here</a></p>
+        )}
+        {activity.isUserCreated ? (
+          <>
+            <button className="btn-primary">Edit</button>
+            <button className="btn-danger">Delete</button>
+          </>
+        ) : (
+          <button className="btn-primary">Join</button>
+        )}
+      </div>
     </div>
-  </div>
   );
 };
+
 function HomePage() {
     const [searchQuery, setSearchQuery] = useState("");
     const [categoryFilter, setCategoryFilter] = useState("All");
     const [selectedActivity, setSelectedActivity] = useState(null);
+    const [activities, setActivities] = useState([]);
+    const token = localStorage.getItem("token");
 
-    const [activities, setActivities] = useState([
-      { id: 1, title: "Mountain Adventure", description: "Join us for an exciting Mountain climbing this weekend! We want to go to the famous Mt. Cameroon.", category: "Outdoor", isEditing: false },
-      { id: 2, title: "Food Tasting Event", description: "Come explore amazing food with fellow food lovers!", category: "Food", isEditing: false },
-      { id: 3, title: "Limbe in Picture", description: "Capture the beauty of Limbe with our photography group.", category: "Creative", isEditing: false }
-    ]);
-
-   const [userActivities, setUserActivities] = useState([
-        { id: 101, title: "Mama's Place", description: "There is a new restaurant at Molyko, called Mama's Place. Let's go and discover their dishes !", category: "Food", isEditing: false }
-      ]);
-
-      const handleActivityClick = (activity) => {
-        setSelectedActivity(activity);
+    useEffect(() => {
+      const fetchActivities = async () => {
+        try {
+          const response = await fetch('https://rrn24.techchantier.site/malingo/public/api/activity', {
+            method: 'GET',
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              'Content-Type': 'application/json'
+            }
+          });
+          const data = await response.json();
+          if (response.ok) {
+            setActivities(data.activities || []);
+          } else {
+            console.error("Error fetching activities: ", data.message);
+          }
+        } catch (error) {
+          console.error("Network error: ", error);
+        }
       };
+      if (token) {
+        fetchActivities();
+      }
+    }, [token]);
+
+    const handleActivityClick = async (activityId) => {
+      try {
+        const response = await fetch(`https://rrn24.techchantier.site/malingo/public/api/activity/${activityId}`, {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        });
+        const data = await response.json();
+        if (response.ok) {
+          setSelectedActivity(data);
+        } else {
+          console.error("Error fetching activity details: ", data.message);
+        }
+      } catch (error) {
+        console.error("Network error: ", error);
+      }
+    };
     
-      const handleCloseDetails = () => {
-        setSelectedActivity(null);
-      };
-
+    const handleCloseDetails = () => {
+      setSelectedActivity(null);
+    };
+    
     const filteredActivities = activities.filter(activity =>
-        (categoryFilter === "All" || activity.category === categoryFilter) &&
-        activity.title.toLowerCase().includes(searchQuery.toLowerCase())
-      );
-    
-      const filteredUserActivities = userActivities.filter(activity =>
-        (categoryFilter === "All" || activity.category === categoryFilter) &&
-        activity.title.toLowerCase().includes(searchQuery.toLowerCase())
-      );
-
-      const handleEdit = (id) => {
-    setUserActivities(userActivities.map(activity =>
-      activity.id === id ? { ...activity, isEditing: !activity.isEditing } : activity
-    ));
-  };
-
-  const handleChange = (id, field, value) => {
-    setUserActivities(userActivities.map(activity =>
-      activity.id === id ? { ...activity, [field]: value } : activity
-    ));
-  };
-
-  const handleDelete = (id) => {
-    setUserActivities(userActivities.filter(activity => activity.id !== id));
-  };
+      (categoryFilter === "All" || activity.category === categoryFilter) &&
+      activity.title.toLowerCase().includes(searchQuery.toLowerCase())
+    );
 
     return (
       <div className="home-page">
         <NavBar />
+        <Link to="/CreateActivity">Create activity</Link>
         <div className="home-container">
           <h1>Discover Activities</h1>
           <div className="search-filter-container">
-          <input 
-            type="text" 
-            placeholder="Search activities..." 
-            value={searchQuery} 
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="search-bar"
-          />
+            <input 
+              type="text" 
+              placeholder="Search activities..." 
+              value={searchQuery} 
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="search-bar"
+            />
             <select 
-            value={categoryFilter} 
-            onChange={(e) => setCategoryFilter(e.target.value)}
-            className="filter-dropdown"
-          >
+              value={categoryFilter} 
+              onChange={(e) => setCategoryFilter(e.target.value)}
+              className="filter-dropdown"
+            >
               <option value="All">All</option>
               <option value="Outdoor">Outdoor</option>
               <option value="Food">Food</option>
@@ -98,47 +124,18 @@ function HomePage() {
             </select>
           </div>
           <div className="activity-list">
-          {filteredActivities.map((activity) => (
-            <div key={activity.id} className="activity-card" onClick={() => handleActivityClick(activity)}>
-              <h3>{activity.title}</h3>
-              <p>{activity.description}</p>
-              <button className="btn-form">More details</button>
-            </div>
-          ))}
+            {filteredActivities.map((activity) => (
+              <div key={activity.id} className="activity-card" onClick={() => handleActivityClick(activity.id)}>
+                <h3>{activity.title}</h3>
+                <p>{activity.description}</p>
+                <button className="btn-form">More details</button>
+              </div>
+            ))}
+          </div>
         </div>
-        
-        <h1>My Activities</h1>
-        <div className="activity-list">
-          {filteredUserActivities.map((activity) => (
-            <div key={activity.id} className="activity-card" onClick={() => handleActivityClick(activity)}>
-              {activity.isEditing ? (
-                <>
-                  <input 
-                    type="text" 
-                    value={activity.title} 
-                    onChange={(e) => handleChange(activity.id, "title", e.target.value)}
-                  />
-                  <textarea 
-                    value={activity.description} 
-                    onChange={(e) => handleChange(activity.id, "description", e.target.value)}
-                  />
-                  <button className="btn-form" onClick={() => handleEdit(activity.id)}>Save</button>
-                </>
-              ) : (
-                <>
-                  <h3>{activity.title}</h3>
-                  <p>{activity.description}</p>
-                  <button className="btn-form" onClick={() => handleEdit(activity.id)}>Edit</button>
-                </>
-              )}
-              <button className="btn-danger" onClick={() => handleDelete(activity.id)}>Delete</button>
-            </div>
-          ))}
-        </div>
+        {selectedActivity && <ActivityDetails activity={selectedActivity} onClose={handleCloseDetails} />}
       </div>
-      {selectedActivity && <ActivityDetails activity={selectedActivity} onClose={handleCloseDetails} />}
-    </div>
     );
-  };
+}
 
-export default HomePage
+export default HomePage;
