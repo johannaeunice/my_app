@@ -3,10 +3,25 @@ import React from "react";
 import "./CreateActivityPage.css";
 import NavBar from "../navBar/NavBar";
 
+const formatDatetime = (dateTimeString) => {
+  if (!dateTimeString) return "";
+
+  const date = new Date(dateTimeString);
+
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  const hours = String(date.getHours()).padStart(2, "0");
+  const minutes = String(date.getMinutes()).padStart(2, "0");
+  const seconds = "00"; // Ajout des secondes
+
+  return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+};
+
+
 function CreateActivityPage() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [date, setDate] = useState("");
   const [time, setTime] = useState("");
   const [location, setLocation] = useState("");
   const [link, setLink] = useState("");
@@ -15,7 +30,7 @@ function CreateActivityPage() {
   const [message, setMessage] = useState("");
   const [isSuccess, setIsSuccess] = useState(false);
   
-  const token = localStorage.getItem("token");
+  const token = sessionStorage.getItem("token");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -34,7 +49,7 @@ function CreateActivityPage() {
     formData.append("link", link);
     formData.append("numberOfMembers", numberOfMembers);
     formData.append("location", location);
-    formData.append("time", `${date} ${time}`);
+    formData.append("time", formatDatetime(time));
     if (activityPhoto) {
       formData.append("ActivityPhoto", activityPhoto);
     }
@@ -44,6 +59,7 @@ function CreateActivityPage() {
         method: "POST",
         headers: {
           "Authorization": `Bearer ${token}`,
+          'Accept': 'application/json'
         },
         body: formData,
       });
@@ -56,7 +72,6 @@ function CreateActivityPage() {
         setMessage("Activity Created Successfully!");
         setTitle("");
         setDescription("");
-        setDate("");
         setTime("");
         setLocation("");
         setLink("");
@@ -68,7 +83,6 @@ function CreateActivityPage() {
         setMessage(data.message || "Failed to create activity. Try again.");
       }
     } catch (error) {
-      console.error("Network error:", error);
       setIsSuccess(false);
       setMessage("A network error occurred. Please check your connection.");
     }
@@ -96,13 +110,8 @@ function CreateActivityPage() {
               required
             />
             <input
-              type="date"
-              value={date}
-              onChange={(e) => setDate(e.target.value)}
-              required
-            />
-            <input
-              type="time"
+              type="datetime-local"
+              name="time"
               value={time}
               onChange={(e) => setTime(e.target.value)}
               required

@@ -71,7 +71,7 @@ const SignUpForm = () => {
           <div className="signup-container">
             <div className="form-section">
               <h2>Create an account</h2>
-              <p>Sign up now and meet people with the same interests!</p>
+              {/* <p>Sign up now and meet people with the same interests!</p> */}
               {message && <div className={isSuccess ? 'success-popup' : 'error-popup'}>{message}</div>}
               <form onSubmit={handleSubmit}>
                 <input type="text" placeholder="Full Name" value={name} onChange={(e) => setName(e.target.value)} required />

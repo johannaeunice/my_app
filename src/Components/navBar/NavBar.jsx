@@ -4,10 +4,10 @@ import './NavBar.css';
 
 const NavBar = () => {
     const navigate = useNavigate();
-    const isAuthenticated = localStorage.getItem('token');
+    const isAuthenticated = sessionStorage.getItem('token');
 
     const handleLogout = () => {
-        localStorage.removeItem('token'); // Remove token from local storage
+        sessionStorage.removeItem('token'); // Remove token from local storage
         navigate('/login'); // Redirect to login page
     };
 

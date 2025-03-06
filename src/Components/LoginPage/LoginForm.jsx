@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 import "./LoginForm.css";
 import NavBar from "../navBar/NavBar";
 
@@ -32,10 +33,12 @@ const LoginForm = () => {
       console.log("API Response:", data);
 
       if (response.ok && data.token) {
-        localStorage.setItem("token", data.token);
-        localStorage.setItem("user", JSON.stringify(data.user)); // Store user details
+        sessionStorage.setItem("token", data.token);
+        sessionStorage.setItem("user", JSON.stringify(data.user)); 
+        console.log(sessionStorage);
+        
         setIsSuccess(true);
-        setMessage("Login successful! Redirecting...");
+        setMessage("Login successful!");
         setTimeout(() => navigate("/Home"), 2000);
       } else {
         setIsSuccess(false);
