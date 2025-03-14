@@ -134,10 +134,12 @@ function HomePage() {
                   {activity.ActivityPhoto ? (
                     <img src={`https://rrn24.techchantier.site/malingo/public/storage/${activity.ActivityPhoto}`} 
                     alt={activity.title} className="activity-thumbnail"
-                    onError={(e) => {e.target.src = "./fallback_image.png"}} />
+                    onError={(e) => {e.target.src = "/src/assets/fallback_image.png"}}
+                     />
 
                   ) : (
-                    <img src='./fallback_image.png'/>
+                    <img src='/src/assets/fallback_image.png'
+                    className='fallback'/>
                   )}
 
                   <h3>{activity.title}</h3>
