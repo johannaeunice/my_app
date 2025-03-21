@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import NavBar from '../navBar/NavBar';
+import FooterComponent from '../navBar/FooterComponent';
 
 const SignUpForm = () => {
     const [name, setName] = useState('');
@@ -90,7 +91,10 @@ const SignUpForm = () => {
                 <p className="text-center mt-4">Already have an account? <Link to="/Login" className="text-blue-500">Sign in</Link></p>
             </div>
         </div>
+         {/* Footer */}
+      <FooterComponent/>
         </div>
+        
     );
 };
 

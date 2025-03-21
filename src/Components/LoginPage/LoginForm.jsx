@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import NavBar from "../navBar/NavBar";
+import FooterComponent from "../navBar/FooterComponent";
 
 const LoginForm = () => {
   const [email, setEmail] = useState("");
@@ -96,6 +97,8 @@ const LoginForm = () => {
         </p>
       </div>
     </div>
+     {/* Footer */}
+     <FooterComponent/>
     </div>
   );
 };
