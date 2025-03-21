@@ -5,8 +5,6 @@ import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 
 const API_URL = "https://rrn24.techchantier.site/malingo/public/api/activity";
-const SEARCH_API = "https://rrn24.techchantier.site/malingo/public/api/api/activities/search";
-const FILTER_API = "https://rrn24.techchantier.site/malingo/public/api/api/activities/filter";
 const FALLBACK_IMAGE = "/src/assets/fallback_image.png";
 
 export default function HomePage() {
@@ -15,7 +13,7 @@ export default function HomePage() {
   const [selectedActivity, setSelectedActivity] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [searchQuery, setSearchQuery] = useState({ title: "", description: "", date: "" });
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     fetch(API_URL)
@@ -25,28 +23,19 @@ export default function HomePage() {
         setFilteredActivities(data);
         setLoading(false);
       })
-      .catch((err) => {
+      .catch(() => {
         setError("Failed to load activities.");
         setLoading(false);
       });
   }, []);
 
-  const handleSearch = () => {
-    const queryString = new URLSearchParams(searchQuery).toString();
-    fetch(`${SEARCH_API}?${queryString}`)
-      .then((response) => response.json())
-      .then((data) => setFilteredActivities(data))
-      .catch(() => setError("Search failed."));
-  };
   useEffect(() => {
     const filtered = activities.filter(activity =>
-      activity.title.toLowerCase().includes(searchQuery.title.toLowerCase()) &&
-      activity.description.toLowerCase().includes(searchQuery.description.toLowerCase()) &&
-      (searchQuery.date ? activity.date === searchQuery.date : true)
+      activity.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      activity.description.toLowerCase().includes(searchQuery.toLowerCase())
     );
     setFilteredActivities(filtered);
   }, [searchQuery, activities]);
-  
 
   return (
     <div className="bg-white text-black">
@@ -71,25 +60,12 @@ export default function HomePage() {
       <div className="flex justify-center gap-2 py-4 px-10">
         <input
           type="text"
-          placeholder="Title"
-          className="p-2 border rounded w-1/4"
-          value={searchQuery.title}
-          onChange={(e) => setSearchQuery({ ...searchQuery, title: e.target.value })}
+          placeholder="Search activities..."
+          className="p-2 border rounded w-1/3"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
         />
-        <input
-          type="text"
-          placeholder="Description"
-          className="p-2 border rounded w-1/4"
-          value={searchQuery.description}
-          onChange={(e) => setSearchQuery({ ...searchQuery, description: e.target.value })}
-        />
-        <input
-          type="date"
-          className="p-2 border rounded w-1/4"
-          value={searchQuery.date}
-          onChange={(e) => setSearchQuery({ ...searchQuery, date: e.target.value })}
-        />
-        <Button className="bg-black text-white" onClick={handleSearch}>Search</Button>
+        <Button className="bg-black text-white">Search</Button>
       </div>
 
       {/* Activity Cards */}
@@ -98,7 +74,7 @@ export default function HomePage() {
           <p>Loading activities...</p>
         ) : error ? (
           <p className="text-red-500">{error}</p>
-        ) : (
+        ) : filteredActivities.length > 0 ? (
           filteredActivities.map(activity => (
             <motion.div 
               key={activity.id} 
@@ -116,10 +92,13 @@ export default function HomePage() {
               <Button className="bg-black text-white mt-2">See more</Button>
             </motion.div>
           ))
+        ) : (
+          <p className="text-center text-red-600 text-xl col-span-full">No activity found.</p>
         )}
       </div>
-        {/* Activity Popup */}
-        {selectedActivity && (
+
+      {/* Activity Popup */}
+      {selectedActivity && (
         <motion.div 
           className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center"
           initial={{ opacity: 0 }}

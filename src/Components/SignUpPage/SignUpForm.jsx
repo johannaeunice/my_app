@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import './SignUpForm.css';
 import NavBar from '../navBar/NavBar';
 
 const SignUpForm = () => {
@@ -65,40 +64,34 @@ const SignUpForm = () => {
     };
 
     return (
-       <div>
-        <NavBar/>
-         <div className="signup-page">
-          <div className="signup-container">
-            <div className="form-section">
-              <h2>Create an account</h2>
-              {/* <p>Sign up now and meet people with the same interests!</p> */}
-              {message && <div className={isSuccess ? 'success-popup' : 'error-popup'}>{message}</div>}
-              <form onSubmit={handleSubmit}>
-                <input type="text" placeholder="Full Name" value={name} onChange={(e) => setName(e.target.value)} required />
-                <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-                <input type="password" placeholder="Password" value={password} onChange={handlePasswordChange} required />
-                <div className="password-confirm-container">
-                  <input type="password" placeholder="Confirm Password" value={passwordConfirmation} onChange={handlePasswordConfirmationChange} required />
-                  {passwordConfirmation && (passwordMatch ? <span className="password-match">✔</span> : <span className="password-error">Passwords don't match</span>)}
+        <div>
+          <NavBar />
+          <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100">
+            
+            <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-md">
+                <h2 className="text-2xl font-semibold text-center mb-4">Create an Account</h2>
+                {message && <div className={`${isSuccess ? 'text-green-500' : 'text-red-500'} text-center mb-4`}>{message}</div>}
+                <form onSubmit={handleSubmit} className="space-y-4">
+                    <input type="text" placeholder="Full Name" value={name} onChange={(e) => setName(e.target.value)} required className="w-full p-2 border rounded-lg" />
+                    <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required className="w-full p-2 border rounded-lg" />
+                    <input type="password" placeholder="Password" value={password} onChange={handlePasswordChange} required className="w-full p-2 border rounded-lg" />
+                    <div className="relative">
+                        <input type="password" placeholder="Confirm Password" value={passwordConfirmation} onChange={handlePasswordConfirmationChange} required className="w-full p-2 border rounded-lg" />
+                        {passwordConfirmation && (
+                            passwordMatch ? <span className="text-green-500 absolute right-3 top-3">✔</span> : <span className="text-red-500 absolute right-3 top-3">✖</span>
+                        )}
+                    </div>
+                    <button type="submit" className="w-full bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600">Create Account</button>
+                </form>
+                <div className="flex justify-between mt-4">
+                    <button className="bg-black text-white p-2 rounded-lg w-1/2 mr-2">Sign up with Apple</button>
+                    <button className="bg-red-500 text-white p-2 rounded-lg w-1/2 ml-2">Sign up with Google</button>
                 </div>
-                <button type="submit" className="btn-primary">Create Account</button>
-              </form>
-              <div className="social-signup">
-                <button className="btn-social apple">Sign up with Apple</button>
-                <button className="btn-social google">Sign up with Google</button>
-              </div>
-              <p className="login-link">Already have an account? <Link to="/Login">Sign in</Link></p>
+                <p className="text-center mt-4">Already have an account? <Link to="/Login" className="text-blue-500">Sign in</Link></p>
             </div>
-            <div className="image-section">
-              <div className="overlay-content">
-                <h3>Join Malingo</h3>
-                <p>Connect with others, grow your network, and discover new opportunities.</p>
-              </div>
-            </div>
-          </div>
         </div>
-       </div>
-      );
-}
+        </div>
+    );
+};
 
 export default SignUpForm;

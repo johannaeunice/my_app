@@ -1,35 +1,18 @@
-import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import './NavBar.css';
+import React from 'react'
+import { Button } from "@/components/ui/button";
 
-const NavBar = () => {
-    const navigate = useNavigate();
-    const isAuthenticated = sessionStorage.getItem('token');
+function NavBar() {
+  return (
+    <nav className="flex justify-between items-center p-4 border-b">
+            <h1 className="text-2xl font-bold tracking-wide">Malingo</h1>
+            <div className="space-x-4">
+              <Button variant="outline" href="/">About Us</Button>
+              <Button variant="outline" href="/">Contact Us</Button>
+              <Button href="/login">Login</Button>
+              <Button href="/signup">Create Account</Button>
+            </div>
+          </nav>
+  )
+}
 
-    const handleLogout = () => {
-        sessionStorage.removeItem('token'); // Remove token from local storage
-        navigate('/login'); // Redirect to login page
-    };
-
-    return (
-      <nav className="navbar">
-        <div className="logo">
-          <p><Link to="/">Malingo</Link></p>
-        </div>
-        <ul className="nav-links">
-          <li><Link to="/contact" className='links'>Contact Us</Link></li>
-          <li><Link to="/about" className='links'>About Us</Link></li>
-          {!isAuthenticated ? (
-            <>
-              <li><Link to="/Signup" className="btn">Sign Up</Link></li>
-              <li><Link to="/Login" className="btn-outline">Login</Link></li>
-            </>
-          ) : (
-            <li><button onClick={handleLogout} className="btn-outline">Logout</button></li>
-          )}
-        </ul>
-      </nav>
-    );
-  };
-
-export default NavBar;
+export default NavBar

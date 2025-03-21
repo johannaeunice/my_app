@@ -1,7 +1,5 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
-import "./LoginForm.css";
 import NavBar from "../navBar/NavBar";
 
 const LoginForm = () => {
@@ -34,7 +32,7 @@ const LoginForm = () => {
 
       if (response.ok && data.token) {
         sessionStorage.setItem("token", data.token);
-        sessionStorage.setItem("user", JSON.stringify(data.user)); 
+        sessionStorage.setItem("user", JSON.stringify(data.user));
         console.log(sessionStorage);
         
         setIsSuccess(true);
@@ -54,45 +52,50 @@ const LoginForm = () => {
   return (
     <div>
       <NavBar />
-      <div className="login-page">
-        <div className="login-container">
-          <div className="form-section">
-            <h2>Welcome Back!</h2>
-            <p>Login to continue exploring!</p>
-            {message && <div className={isSuccess ? "success-popup" : "error-popup"}>{message}</div>}
-            <form onSubmit={handleSubmit}>
-              <input
-                type="email"
-                placeholder="Email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-              />
-              <input
-                type="password"
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
-              <button type="submit" className="btn-primary">Login</button>
-            </form>
-            <div className="social-login">
-              <button className="btn-social apple">Login with Apple</button>
-              <button className="btn-social google">Login with Google</button>
-            </div>
-            <p className="signup-link">
-              Don't have an account? <Link to="/Signup">Sign up</Link>
-            </p>
+      <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100">
+      
+      <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
+        <h2 className="text-2xl font-bold text-center text-gray-700">Welcome Back!</h2>
+        <p className="text-center text-gray-500 mb-4">Login to continue exploring!</p>
+        {message && (
+          <div className={`p-2 text-center text-white rounded ${isSuccess ? "bg-green-500" : "bg-red-500"}`}>
+            {message}
           </div>
-          <div className="image-section">
-            <div className="overlay-content">
-              <h3>Welcome to Malingo</h3>
-              <p>Reconnect, engage, and explore endless possibilities.</p>
-            </div>
-          </div>
+        )}
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <input
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+            className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          <input
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+            className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          <button type="submit" className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 transition">
+            Login
+          </button>
+        </form>
+        <div className="flex flex-col gap-2 mt-4">
+          <button className="w-full bg-black text-white py-2 rounded hover:opacity-80 transition">
+            Login with Apple
+          </button>
+          <button className="w-full bg-red-500 text-white py-2 rounded hover:bg-red-600 transition">
+            Login with Google
+          </button>
         </div>
+        <p className="text-center text-gray-500 mt-4">
+          Don't have an account? <Link to="/Signup" className="text-blue-500 hover:underline">Sign up</Link>
+        </p>
       </div>
+    </div>
     </div>
   );
 };
