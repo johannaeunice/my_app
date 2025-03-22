@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { FaTimes } from "react-icons/fa";
-import { Button } from "@/components/ui/button";
+import { Button } from '@/components/ui/button';
 import { Link } from "react-router-dom";
 
 const API_URL = "https://rrn24.techchantier.site/malingo/public/api/activity";
