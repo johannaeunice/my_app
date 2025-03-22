@@ -57,11 +57,11 @@ export default function HomePage() {
       </header>
 
       {/* Search Bar */}
-      <div className="flex justify-center gap-2 py-4 px-10">
+      <div className="flex justify-center gap-2 py-4 px-10 ">
         <input
           type="text"
           placeholder="Search activities..."
-          className="p-2 border rounded w-1/3"
+          className="p-2 border rounded w-2/3"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
         />
