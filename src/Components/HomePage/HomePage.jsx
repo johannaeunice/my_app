@@ -11,7 +11,7 @@ import { Link, useNavigate } from 'react-router-dom';
 
 const FALLBACK_IMAGE = '/fallback.jpg';
 
-// New color palette based on SRS with improved usage
+// Color palette from SRS document
 const colors = {
   primary: '#007CC3',      // Blue from SRS
   secondary: '#FF8C00',    // Orange from SRS
@@ -28,8 +28,6 @@ export default function HomePage() {
   const [activities, setActivities] = useState([]);
   const [selectedActivity, setSelectedActivity] = useState(null);
   const [joinedActivities, setJoinedActivities] = useState(new Set());
-  const [categories, setCategories] = useState(['All', 'Travel', 'Dining', 'Hiking', 'Sports', 'Movies']);
-  const [selectedCategory, setSelectedCategory] = useState('All');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -40,8 +38,7 @@ export default function HomePage() {
   }, []);
 
   const filteredActivities = activities.filter((activity) =>
-    activity.title.toLowerCase().includes(searchTerm.toLowerCase()) &&
-    (selectedCategory === 'All' || activity.category === selectedCategory)
+    activity.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const handleJoinActivity = async (activityId) => {
@@ -77,6 +74,52 @@ export default function HomePage() {
     navigate("/login");
   };
 
+  // Sidebar button hover animation variants
+  const sidebarButtonVariants = {
+    initial: { 
+      backgroundColor: "rgba(255, 255, 255, 0)",
+      transition: { duration: 0.2 }
+    },
+    hover: { 
+      backgroundColor: "rgba(255, 255, 255, 0.15)",
+      x: 6,
+      transition: { duration: 0.2 }
+    }
+  };
+
+  // Logout button animations
+  const logoutButtonVariants = {
+    initial: { 
+      borderColor: "rgba(255, 107, 107, 0.7)",
+      backgroundColor: "rgba(255, 107, 107, 0)",
+      scale: 1
+    },
+    hover: { 
+      borderColor: "rgba(255, 107, 107, 1)",
+      backgroundColor: "rgba(255, 107, 107, 0.1)",
+      scale: 1.05,
+      transition: { 
+        duration: 0.3,
+        yoyo: Infinity,
+        ease: "easeInOut"
+      }
+    }
+  };
+
+  // Card animation variants
+  const cardVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: (i) => ({
+      opacity: 1,
+      y: 0,
+      transition: {
+        delay: i * 0.1,
+        duration: 0.5,
+        ease: "easeOut"
+      }
+    })
+  };
+
   return (
     <div className="flex h-screen bg-gray-50">
       {/* Sidebar */}
@@ -85,50 +128,124 @@ export default function HomePage() {
         style={{ background: colors.sidebar }}
       >
         <div>
-          <h2 className="text-2xl font-bold mb-8 flex items-center">
-            <span style={{ color: colors.secondary }}>M</span>
+          <motion.h2 
+            className="text-2xl font-bold mb-8 flex items-center"
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            <motion.span 
+              style={{ color: colors.secondary }}
+              animate={{ 
+                scale: [1, 1.1, 1],
+                rotateZ: [0, 5, 0]
+              }}
+              transition={{ 
+                duration: 2,
+                repeat: Infinity,
+                repeatType: "reverse"
+              }}
+            >
+              M
+            </motion.span>
             <span>alingo</span>
-          </h2>
+          </motion.h2>
           <nav className="flex flex-col gap-4">
-            <Button 
-              variant="ghost" 
-              className="flex items-center gap-3 text-left hover:bg-white hover:bg-opacity-10 transition-all"
+            <motion.div
+              variants={sidebarButtonVariants}
+              initial="initial"
+              whileHover="hover"
             >
-              <User size={20} /> My Account
-            </Button>
-            <Button 
-              variant="ghost" 
-              className="flex items-center gap-3 text-left hover:bg-white hover:bg-opacity-10 transition-all"
+              <Button 
+                variant="ghost" 
+                className="flex w-full items-center gap-3 text-left transition-all"
+              >
+                <User size={20} /> My Account
+              </Button>
+            </motion.div>
+
+            <motion.div
+              variants={sidebarButtonVariants}
+              initial="initial"
+              whileHover="hover"
             >
-              <PlusCircle size={20} /> Create Activity
-            </Button>
-            <Button 
-              variant="ghost" 
-              className="flex items-center gap-3 text-left hover:bg-white hover:bg-opacity-10 transition-all"
+              <Button 
+                variant="ghost" 
+                className="flex w-full items-center gap-3 text-left transition-all"
+              >
+                <PlusCircle size={20} /> Create Activity
+              </Button>
+            </motion.div>
+
+            <motion.div
+              variants={sidebarButtonVariants}
+              initial="initial"
+              whileHover="hover"
             >
-              <List size={20} /> My Activities
-            </Button>
+              <Button 
+                variant="ghost" 
+                className="flex w-full items-center gap-3 text-left transition-all"
+              >
+                <List size={20} /> My Activities
+              </Button>
+            </motion.div>
           </nav>
         </div>
         <div className="space-y-3">
-          <Button 
-            onClick={handleLogout}
-            className="flex w-full justify-start items-center gap-3 text-left bg-transparent hover:bg-white hover:bg-opacity-10 border border-red-400 text-red-400"
+          <motion.div
+            variants={logoutButtonVariants}
+            initial="initial"
+            whileHover="hover"
           >
-            <LogOutIcon size={20} /> Logout
-          </Button>
+            <Button 
+              onClick={handleLogout}
+              className="flex w-full justify-start items-center gap-3 text-left bg-transparent border border-red-400 text-red-400"
+            >
+              <motion.div
+                animate={{ 
+                  x: [0, 3, 0, 3, 0],
+                }}
+                transition={{ 
+                  duration: 0.5,
+                  repeat: Infinity,
+                  repeatType: "reverse",
+                  repeatDelay: 2
+                }}
+              >
+                <LogOutIcon size={20} />
+              </motion.div>
+              Logout
+            </Button>
+          </motion.div>
           <p className="text-xs text-gray-400">&copy; 2025 Malingo</p>
         </div>
       </div>
 
       {/* Main Content */}
-      <div className="ml-64 flex-1 p-6">
-        <h1 className="text-2xl font-bold mb-6" style={{ color: colors.text }}>
+      <motion.div 
+        className="ml-64 flex-1 p-6"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5 }}
+      >
+        <motion.h1 
+          className="text-2xl font-bold mb-6" 
+          style={{ color: colors.text }}
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
           Discover Activities
-        </h1>
+        </motion.h1>
         
         {/* Search Bar */}
-        <div className="mb-6 flex items-center gap-3 bg-white p-2 rounded-lg shadow-sm">
+        <motion.div 
+          className="mb-6 flex items-center gap-3 bg-white p-2 rounded-lg shadow-sm"
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.1 }}
+          whileHover={{ boxShadow: "0 4px 12px rgba(0,0,0,0.1)" }}
+        >
           <Search size={20} style={{ color: colors.primary }} />
           <Input
             type="text"
@@ -137,33 +254,23 @@ export default function HomePage() {
             onChange={(e) => setSearchTerm(e.target.value)}
             className="w-full border-none focus:ring-0"
           />
-        </div>
+        </motion.div>
         
-        {/* Categories */}
-        <div className="mb-6 flex gap-2 overflow-x-auto pb-2">
-          {categories.map(category => (
-            <Button
-              key={category}
-              onClick={() => setSelectedCategory(category)}
-              className={`rounded-full px-4 py-2 text-sm whitespace-nowrap ${
-                selectedCategory === category 
-                  ? 'text-white' 
-                  : 'text-gray-700 bg-white hover:bg-gray-100'
-              }`}
-              style={selectedCategory === category ? { backgroundColor: colors.primary } : {}}
-            >
-              {category}
-            </Button>
-          ))}
-        </div>
-
         {/* Activities Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {filteredActivities.map((activity) => (
+          {filteredActivities.map((activity, index) => (
             <motion.div
               key={activity.id}
-              className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-all cursor-pointer"
-              whileHover={{ y: -5 }}
+              custom={index}
+              variants={cardVariants}
+              initial="hidden"
+              animate="visible"
+              whileHover={{ 
+                y: -10, 
+                boxShadow: "0 10px 25px rgba(0,0,0,0.1)",
+                transition: { duration: 0.3 }
+              }}
+              className="bg-white rounded-lg shadow-md overflow-hidden cursor-pointer"
               onClick={() => setSelectedActivity(activity)}
             >
               <div className="relative">
@@ -172,12 +279,14 @@ export default function HomePage() {
                   alt={activity.title} 
                   className="w-full h-48 object-cover" 
                 />
-                <div 
+                <motion.div 
                   className="absolute top-3 right-3 px-2 py-1 rounded-full text-xs font-medium"
                   style={{ backgroundColor: colors.secondary, color: 'white' }}
+                  whileHover={{ scale: 1.1 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 10 }}
                 >
                   {activity.category || 'Activity'}
-                </div>
+                </motion.div>
               </div>
               <div className="p-4">
                 <h3 className="text-lg font-bold mb-2" style={{ color: colors.text }}>
@@ -198,19 +307,26 @@ export default function HomePage() {
                   <Users size={16} className="mr-1" /> {activity.numberOfMembers || '0'} members
                 </div>
                 {joinedActivities.has(activity.id) ? (
-                  <div 
+                  <motion.div 
                     className="w-full py-2 rounded text-center text-white font-medium"
                     style={{ backgroundColor: colors.success }}
+                    whileHover={{ scale: 1.03 }}
+                    whileTap={{ scale: 0.97 }}
                   >
                     Request Sent
-                  </div>
+                  </motion.div>
                 ) : (
-                  <Button 
-                    className="w-full"
-                    style={{ backgroundColor: colors.primary, color: 'white' }}
+                  <motion.div
+                    whileHover={{ scale: 1.03 }}
+                    whileTap={{ scale: 0.97 }}
                   >
-                    See more
-                  </Button>
+                    <Button 
+                      className="w-full"
+                      style={{ backgroundColor: colors.primary, color: 'white' }}
+                    >
+                      See more
+                    </Button>
+                  </motion.div>
                 )}
               </div>
             </motion.div>
@@ -219,18 +335,28 @@ export default function HomePage() {
         
         {/* Empty State */}
         {filteredActivities.length === 0 && (
-          <div className="text-center py-12">
+          <motion.div 
+            className="text-center py-12"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.4 }}
+          >
             <h3 className="text-xl font-medium mb-2">No activities found</h3>
             <p className="text-gray-500">Try adjusting your search or create a new activity!</p>
-            <Button 
-              className="mt-4"
-              style={{ backgroundColor: colors.primary, color: 'white' }}
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
             >
-              <PlusCircle size={16} className="mr-2" /> Create Activity
-            </Button>
-          </div>
+              <Button 
+                className="mt-4"
+                style={{ backgroundColor: colors.primary, color: 'white' }}
+              >
+                <PlusCircle size={16} className="mr-2" /> Create Activity
+              </Button>
+            </motion.div>
+          </motion.div>
         )}
-      </div>
+      </motion.div>
 
       {/* Activity Details Popup */}
       {selectedActivity && (
@@ -238,95 +364,173 @@ export default function HomePage() {
           className="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center p-4 z-50"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
         >
           <motion.div 
             className="bg-white rounded-lg shadow-xl w-full max-w-4xl overflow-hidden relative"
-            initial={{ scale: 0.9, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
+            initial={{ scale: 0.8, opacity: 0, y: 20 }}
+            animate={{ scale: 1, opacity: 1, y: 0 }}
+            transition={{ 
+              type: "spring", 
+              damping: 25, 
+              stiffness: 300 
+            }}
           >
-            <button 
+            <motion.button 
               onClick={() => setSelectedActivity(null)} 
               className="absolute top-4 right-4 z-10 bg-white rounded-full p-2 shadow-md"
+              whileHover={{ 
+                scale: 1.1, 
+                rotate: 90,
+                backgroundColor: "#f8f8f8" 
+              }}
+              whileTap={{ scale: 0.9 }}
             >
               <FaTimes size={16} style={{ color: colors.text }} />
-            </button>
+            </motion.button>
             
             <div className="grid grid-cols-1 md:grid-cols-2">
               <div className="relative h-full">
-                <img 
+                <motion.img 
                   src={selectedActivity.ActivityPhoto || FALLBACK_IMAGE} 
                   alt={selectedActivity.title} 
                   className="w-full h-full object-cover" 
+                  initial={{ scale: 1.1 }}
+                  animate={{ scale: 1 }}
+                  transition={{ duration: 0.5 }}
                 />
                 <div 
                   className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-6"
                 >
-                  <div 
+                  <motion.div 
                     className="inline-block px-3 py-1 rounded-full text-sm font-medium mb-2"
                     style={{ backgroundColor: colors.secondary, color: 'white' }}
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.2 }}
                   >
                     {selectedActivity.category || 'Activity'}
-                  </div>
-                  <h3 className="text-2xl font-bold text-white">
+                  </motion.div>
+                  <motion.h3 
+                    className="text-2xl font-bold text-white"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.3 }}
+                  >
                     {selectedActivity.title}
-                  </h3>
+                  </motion.h3>
                 </div>
               </div>
               
               <div className="p-6 flex flex-col h-full">
                 <div className="mb-6 flex-grow">
-                  <div className="flex flex-wrap gap-4 mb-6">
-                    <div className="flex items-center text-sm text-gray-600">
+                  <motion.div 
+                    className="flex flex-wrap gap-4 mb-6"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.2 }}
+                  >
+                    <motion.div 
+                      className="flex items-center text-sm text-gray-600"
+                      initial={{ opacity: 0, x: -10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.3 }}
+                    >
                       <MapPin size={18} style={{ color: colors.primary }} className="mr-1" /> 
                       {selectedActivity.location}
-                    </div>
-                    <div className="flex items-center text-sm text-gray-600">
+                    </motion.div>
+                    <motion.div 
+                      className="flex items-center text-sm text-gray-600"
+                      initial={{ opacity: 0, x: -10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.4 }}
+                    >
                       <Calendar size={18} style={{ color: colors.primary }} className="mr-1" /> 
                       {selectedActivity.date} at {selectedActivity.time}
-                    </div>
-                    <div className="flex items-center text-sm text-gray-600">
+                    </motion.div>
+                    <motion.div 
+                      className="flex items-center text-sm text-gray-600"
+                      initial={{ opacity: 0, x: -10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.5 }}
+                    >
                       <Users size={18} style={{ color: colors.primary }} className="mr-1" /> 
                       {selectedActivity.numberOfMembers || '0'} members
-                    </div>
-                  </div>
+                    </motion.div>
+                  </motion.div>
                   
-                  <h4 className="text-lg font-medium mb-2">About this activity</h4>
-                  <p className="text-gray-700 mb-4">{selectedActivity.description}</p>
+                  <motion.h4 
+                    className="text-lg font-medium mb-2"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.4 }}
+                  >
+                    About this activity
+                  </motion.h4>
+                  <motion.p 
+                    className="text-gray-700 mb-4"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.5 }}
+                  >
+                    {selectedActivity.description}
+                  </motion.p>
                   
                   {selectedActivity.link && (
-                    <div className="mb-4">
+                    <motion.div 
+                      className="mb-4"
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.6 }}
+                    >
                       <h4 className="text-lg font-medium mb-2">Group Link</h4>
-                      <a 
+                      <motion.a 
                         href={selectedActivity.link} 
                         className="inline-flex items-center text-sm underline"
                         style={{ color: colors.primary }}
                         target="_blank" 
                         rel="noopener noreferrer"
+                        whileHover={{ scale: 1.05 }}
                       >
                         {selectedActivity.title} group
-                      </a>
-                    </div>
+                      </motion.a>
+                    </motion.div>
                   )}
                 </div>
                 
-                <div className="mt-auto">
+                <motion.div 
+                  className="mt-auto"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.7 }}
+                >
                   {joinedActivities.has(selectedActivity.id) ? (
-                    <Button 
-                      className="w-full py-3"
-                      style={{ backgroundColor: colors.success, color: 'white' }}
+                    <motion.div
+                      whileHover={{ scale: 1.03 }}
+                      whileTap={{ scale: 0.97 }}
                     >
-                      Request Sent
-                    </Button>
+                      <Button 
+                        className="w-full py-3"
+                        style={{ backgroundColor: colors.success, color: 'white' }}
+                      >
+                        Request Sent
+                      </Button>
+                    </motion.div>
                   ) : (
-                    <Button 
-                      onClick={() => handleJoinActivity(selectedActivity.id)} 
-                      className="w-full py-3"
-                      style={{ backgroundColor: colors.primary, color: 'white' }}
+                    <motion.div
+                      whileHover={{ scale: 1.03 }}
+                      whileTap={{ scale: 0.97 }}
                     >
-                      Join Activity
-                    </Button>
+                      <Button 
+                        onClick={() => handleJoinActivity(selectedActivity.id)} 
+                        className="w-full py-3"
+                        style={{ backgroundColor: colors.primary, color: 'white' }}
+                      >
+                        Join Activity
+                      </Button>
+                    </motion.div>
                   )}
-                </div>
+                </motion.div>
               </div>
             </div>
           </motion.div>
