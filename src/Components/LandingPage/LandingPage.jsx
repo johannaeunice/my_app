@@ -18,6 +18,7 @@ import {
   Compass,
   ChevronDown,
 } from "lucide-react";
+import FooterComponent from "../navBar/FooterComponent";
 
 const API_URL = "https://rrn24.techchantier.site/malingo/public/api/activity";
 const FALLBACK_IMAGE = "/src/assets/fallback_image.png";
@@ -1119,6 +1120,9 @@ export default function LandingPage() {
           </motion.div>
         </motion.div>
       )}
+      <footer className="h-5 text-center  p-6" style={{ background: colors.primary} }>
+      <p className="text-bold text-white">&copy; 2025 Malingo</p>
+      </footer>
     </div>
   );
 }
