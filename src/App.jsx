@@ -5,6 +5,8 @@ import SignUpForm from './Components/SignUpPage/SignUpForm';
 import LoginForm from './Components/LoginPage/LoginForm';
 import HomePage from './Components/HomePage/HomePage';
 import CreateActivityPage from './Components/CreateActivity/CreateActivityPage';
+import AccountPage from './Components/Account/Account';
+import MyActivities from './Components/Activities/Activities';
 
 function App() {
   return (
@@ -15,6 +17,8 @@ function App() {
         <Route path="/Login" element={<LoginForm/>}/>
         <Route path="/Home" element={<HomePage/>}/>
         <Route path="/CreateActivity" element={<CreateActivityPage/>}/>
+        <Route path='/MyAccount' element={<AccountPage/>}/>
+        <Route path='/Activities' element={<MyActivities/>}/>
       </Routes>
     </Router>
   );

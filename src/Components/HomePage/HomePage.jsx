@@ -73,6 +73,15 @@ export default function HomePage() {
     sessionStorage.removeItem("authToken");
     navigate("/login");
   };
+  const handleAccount = () => {
+    navigate("/MyAccount");
+  }
+  const handleActivity = () => {
+    navigate("/Activities")
+  }
+  const handleCreateActivity = () => {
+    navigate("/CreateActivity")
+  }
 
   // Sidebar button hover animation variants
   const sidebarButtonVariants = {
@@ -158,12 +167,15 @@ export default function HomePage() {
               initial="initial"
               whileHover="hover"
             >
-              <Button 
+               <Button 
                 variant="ghost" 
+                onClick={handleAccount}
                 className="flex w-full items-center gap-3 text-left transition-all"
               >
                 <User size={20} /> My Account
               </Button>
+              
+             
             </motion.div>
 
             <motion.div
@@ -172,6 +184,7 @@ export default function HomePage() {
               whileHover="hover"
             >
               <Button 
+              onClick={handleCreateActivity}
                 variant="ghost" 
                 className="flex w-full items-center gap-3 text-left transition-all"
               >
@@ -186,6 +199,7 @@ export default function HomePage() {
             >
               <Button 
                 variant="ghost" 
+                onClick={handleActivity}
                 className="flex w-full items-center gap-3 text-left transition-all"
               >
                 <List size={20} /> My Activities
