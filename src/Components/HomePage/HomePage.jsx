@@ -82,6 +82,7 @@ export default function HomePage() {
     },
     hover: { 
       backgroundColor: "rgba(255, 255, 255, 0.15)",
+      borderRadius: 10,
       x: 6,
       transition: { duration: 0.2 }
     }
@@ -121,7 +122,8 @@ export default function HomePage() {
   };
 
   return (
-    <div className="flex h-screen bg-gray-50">
+    <div>
+      <div className="flex h-screen bg-gray-50">
       {/* Sidebar */}
       <div 
         className="w-64 text-white p-5 flex flex-col justify-between fixed h-full"
@@ -537,5 +539,7 @@ export default function HomePage() {
         </motion.div>
       )}
     </div>
+    </div>
+       
   );
 }

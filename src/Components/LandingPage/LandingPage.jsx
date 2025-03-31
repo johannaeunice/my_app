@@ -17,8 +17,8 @@ import {
   Globe,
   Compass,
   ChevronDown,
+  User
 } from "lucide-react";
-import FooterComponent from "../navBar/FooterComponent";
 
 const API_URL = "https://rrn24.techchantier.site/malingo/public/api/activity";
 const FALLBACK_IMAGE = "/src/assets/fallback_image.png";
@@ -932,14 +932,14 @@ export default function LandingPage() {
           >
             <h3 className="text-xl font-medium mb-2">No activities found</h3>
             <p className="text-gray-500">
-              Try adjusting your search or create a new activity!
+              Try adjusting your search or join now and create a new activity!
             </p>
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
               <Button
                 className="mt-4"
                 style={{ backgroundColor: colors.primary, color: "white" }}
               >
-                <PlusCircle size={16} className="mr-2" /> Create Activity
+                <User size={16} className="mr-2" /> Join Now !
               </Button>
             </motion.div>
           </motion.div>
