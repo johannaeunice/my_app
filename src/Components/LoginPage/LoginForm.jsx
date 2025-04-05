@@ -93,7 +93,7 @@ const LoginForm = () => {
                   value={email} 
                   onChange={(e) => setEmail(e.target.value)} 
                   required 
-                  className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#007CC3] focus:border-transparent" 
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FFA500] focus:border-transparent" 
                 />
               </div>
               
@@ -110,7 +110,7 @@ const LoginForm = () => {
                     value={password} 
                     onChange={(e) => setPassword(e.target.value)} 
                     required 
-                    className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#007CC3] focus:border-transparent" 
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FFA500] focus:border-transparent" 
                   />
                   <button 
                     type="button" 
@@ -135,7 +135,7 @@ const LoginForm = () => {
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 type="submit" 
-                className="w-full bg-[#007CC3] text-white p-3 rounded-lg hover:bg-[#006ba7] transition-all duration-300"
+                className="w-full bg-[#FFA500] text-white p-3 rounded-lg hover:bg-[#006ba7] transition-all duration-300"
               >
                 Sign In
               </motion.button>
@@ -172,13 +172,13 @@ const LoginForm = () => {
             </div>
             
             <p className="text-center mt-6 text-gray-600">
-              Don't have an account? <Link to="/signup" className="text-[#007CC3] hover:underline">Sign up</Link>
+              Don't have an account? <Link to="/signup" className="text-[#FF8C00] hover:underline">Sign up</Link>
             </p>
           </motion.div>
           
           {/* Right side: Image */}
           <motion.div 
-            className="hidden md:block w-1/2 bg-gradient-to-r from-[#FF8C00] to-[#FFA500] p-8 relative overflow-hidden"
+            className="hidden md:block w-1/2 bg-gradient-to-r from-[#FF8C00]  to-[#FFA500] p-8 relative overflow-hidden"
             initial={{ opacity: 0, x: 50 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}

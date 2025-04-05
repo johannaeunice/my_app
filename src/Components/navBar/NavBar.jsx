@@ -36,12 +36,31 @@ const NavBar = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const handleLogout = () => {
-    sessionStorage.removeItem("token");
-    sessionStorage.removeItem("user");
-    setIsLoggedIn(false);
-    setUser(null);
-    navigate("/login");
+  const handleLogout = async() => {
+    const token = sessionStorage.getItem('token');
+
+    try{
+      const response = await fetch('https://rrn24.techchantier.site/malingo/public/api/logout', {
+        method : 'POST',
+        headers: {
+          'Content-Type' : 'application/json',
+          'Accept' : 'application/json',
+          "Authorization": `Bearer ${token}`,
+        },
+      });
+
+      const data = await response.json();
+
+      if (response.ok){
+        console.log('Logout successful !');
+        sessionStorage.removeItem('token');
+        navigate("/login");
+      } else {
+        console.log('Logout failed', data);
+      }
+    } catch(error){
+      console.error('error', error);
+    }
   };
 
   const toggleMenu = () => {
@@ -81,9 +100,9 @@ const NavBar = () => {
           <div className="hidden md:flex items-center space-x-8">
             <nav className="flex space-x-6">
               <Link 
-                to="/" 
+                to="/Home" 
                 className={`transition-colors duration-300 ${
-                  isActive("/") 
+                  isActive("/Home") 
                     ? "text-[#007CC3] font-medium" 
                     : "text-gray-600 hover:text-[#007CC3]"
                 }`}
@@ -91,14 +110,24 @@ const NavBar = () => {
                 Home
               </Link>
               <Link 
-                to="/activities" 
+                to="/Activities" 
                 className={`transition-colors duration-300 ${
-                  isActive("/activities") 
+                  isActive("/Activities") 
                     ? "text-[#007CC3] font-medium" 
                     : "text-gray-600 hover:text-[#007CC3]"
                 }`}
               >
                 Activities
+              </Link>
+              <Link 
+                to="/CreateActivity" 
+                className={`transition-colors duration-300 ${
+                  isActive("/CreateActivity") 
+                    ? "text-[#007CC3] font-medium" 
+                    : "text-gray-600 hover:text-[#007CC3]"
+                }`}
+              >
+                Create Activity
               </Link>
               <Link 
                 to="/about" 
@@ -159,17 +188,17 @@ const NavBar = () => {
                       className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-2 z-50"
                     >
                       <Link 
-                        to="/profile" 
+                        to="/MyAccount" 
                         className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
                       >
                         My Profile
                       </Link>
-                      <Link 
-                        to="/my-activities" 
+                      {/* <Link 
+                        to="/Activities" 
                         className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
                       >
                         My Activities
-                      </Link>
+                      </Link> */}
                       <Link 
                         to="/settings" 
                         className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
@@ -295,14 +324,14 @@ const NavBar = () => {
                 {isLoggedIn ? (
                   <>
                     <Link 
-                      to="/profile" 
+                      to="/MyAccount" 
                       className="py-2 text-gray-700"
                       onClick={() => setIsMenuOpen(false)}
                     >
                       My Profile
                     </Link>
                     <Link 
-                      to="/my-activities" 
+                      to="/Activities" 
                       className="py-2 text-gray-700"
                       onClick={() => setIsMenuOpen(false)}
                     >

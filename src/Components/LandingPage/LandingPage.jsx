@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { FaTimes } from "react-icons/fa";
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   Search,
   Users,
@@ -40,6 +40,7 @@ export default function LandingPage() {
   const [error, setError] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [isScrolled, setIsScrolled] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -126,6 +127,9 @@ export default function LandingPage() {
     }),
   };
 
+  const handleLogin = () => {
+    navigate("/login")
+  }
   return (
     <div className="bg-white text-black">
       {/* Navigation Bar - Fixed on scroll */}
@@ -1105,7 +1109,7 @@ export default function LandingPage() {
                   transition={{ delay: 0.7 }}
                 >
                   <Button
-                    onClick={() => handleJoinActivity(selectedActivity.id)}
+                   onClick={handleLogin}
                     className="w-full py-3"
                     style={{
                       backgroundColor: colors.primary,
@@ -1120,9 +1124,10 @@ export default function LandingPage() {
           </motion.div>
         </motion.div>
       )}
-      <footer className="h-5 text-center  p-6" style={{ background: colors.primary} }>
-      <p className="text-bold text-white">&copy; 2025 Malingo</p>
-      </footer>
+      {/* Footer */}
+      <div className="py-6 text-center text-gray-500 text-sm">
+        <p>&copy; 2025 Malingo. All rights reserved.</p>
+      </div>
     </div>
   );
 }

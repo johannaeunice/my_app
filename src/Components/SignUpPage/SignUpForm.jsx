@@ -193,7 +193,7 @@ const SignUpForm = () => {
                                 type="submit" 
                                 className="w-full bg-[#007CC3] text-white p-3 rounded-lg hover:bg-[#006ba7] transition-all duration-300"
                             >
-                                Submit
+                                Sign Up
                             </motion.button>
                         </form>
                         

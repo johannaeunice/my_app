@@ -123,7 +123,7 @@ function CreateActivityPage() {
   };
 
   return (
-    <div>
+    <div className="mt-15">
       <NavBar />
       <motion.div 
         className="create-activity-page"

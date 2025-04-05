@@ -122,7 +122,7 @@ const AccountPage = () => {
       transition={{ duration: 0.5 }}
       className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8"
     >
-      <div className="max-w-3xl mx-auto bg-white rounded-xl shadow-md overflow-hidden">
+      <div className="max-w-3xl mx-auto mt-10 bg-white rounded-xl shadow-md overflow-hidden">
         {/* Header with background */}
         <NavBar/>
         <div className="h-32 bg-gradient-to-r from-blue-500 to-blue-700 relative">

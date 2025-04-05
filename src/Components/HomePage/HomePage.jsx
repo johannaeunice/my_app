@@ -69,9 +69,31 @@ export default function HomePage() {
     }
   };
 
-  const handleLogout = () => {
-    sessionStorage.removeItem("authToken");
-    navigate("/login");
+  const handleLogout = async() => {
+    const token = sessionStorage.getItem('token');
+
+    try{
+      const response = await fetch('https://rrn24.techchantier.site/malingo/public/api/logout', {
+        method : 'POST',
+        headers: {
+          'Content-Type' : 'application/json',
+          'Accept' : 'application/json',
+          "Authorization": `Bearer ${token}`,
+        },
+      });
+
+      const data = await response.json();
+
+      if (response.ok){
+        console.log('Logout successful !');
+        sessionStorage.removeItem('token');
+        navigate("/login");
+      } else {
+        console.log('Logout failed', data);
+      }
+    } catch(error){
+      console.error('error', error);
+    }
   };
   const handleAccount = () => {
     navigate("/MyAccount");
@@ -553,7 +575,6 @@ export default function HomePage() {
         </motion.div>
       )}
     </div>
-    </div>
-       
+    </div>   
   );
 }

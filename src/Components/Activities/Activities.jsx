@@ -21,6 +21,75 @@ const MyActivities = () => {
   const [error, setError] = useState(null);
   const [selectedActivity, setSelectedActivity] = useState(null);
   const [notification, setNotification] = useState({ show: false, message: '', type: '' });
+  const [isEditMode, setIsEditMode] = useState(false);
+const [editFormData, setEditFormData] = useState({});
+const [joinedUsers, setJoinedUsers] = useState([]);
+const [joinRequests, setJoinRequests] = useState([]);
+const [showJoinedUsers, setShowJoinedUsers] = useState(false);
+const [showJoinRequests, setShowJoinRequests] = useState(false);
+const [isLoading, setIsLoading] = useState({
+  joinedUsers: false,
+  joinRequests: false,
+  editActivity: false,
+  deleteActivity: false
+});
+const fetchJoinedUsers = async (activityId) => {
+  setIsLoading({ ...isLoading, joinedUsers: true });
+  try {
+    const token = sessionStorage.getItem('token');
+    if (!token) {
+      throw new Error('Authentication token not found');
+    }
+
+    const response = await axios.get(
+      `https://rrn24.techchantier.site/malingo/public/api/activities/${activityId}/joined-users`,
+      {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        }
+      }
+    );
+
+    setJoinedUsers(response.data);
+    setShowJoinedUsers(true);
+  } catch (err) {
+    console.error('Error fetching joined users:', err);
+    showNotification('Failed to load joined users', 'error');
+  } finally {
+    setIsLoading({ ...isLoading, joinedUsers: false });
+  }
+};
+
+
+const fetchJoinRequests = async (activityId) => {
+  setIsLoading({...isLoading, joinRequests: true});
+  try {
+    const token = sessionStorage.getItem('token');
+    if (!token) {
+      throw new Error('Authentication token not found');
+    }
+    
+    const response = await axios.get(
+      `https://rrn24.techchantier.site/malingo/public/api/activity/${activityId}/join-requests`,
+      {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        }
+      }
+    );
+    setJoinRequests(response.data.data || []);
+    setShowJoinRequests(true);
+  } catch (err) {
+    console.error('Error fetching join requests:', err);
+    showNotification('Failed to load join requests', 'error');
+  } finally {
+    setIsLoading({...isLoading, joinRequests: false});
+  }
+};
 
   const cardVariants = {
     hidden: { opacity: 0, y: 20 },
@@ -35,10 +104,183 @@ const MyActivities = () => {
     })
   };
 
-  useEffect(() => {
-    fetchUserActivities();
-  }, []);
-
+  const handleJoinRequest = async (requestId, status) => {
+    try {
+      const token = sessionStorage.getItem('token');
+      if (!token) {
+        throw new Error('Authentication token not found');
+      }
+      
+      await axios.post(
+        `https://rrn24.techchantier.site/malingo/public/api/join-requests/${requestId}/${status}`,
+        {},
+        {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          }
+        }
+      );
+      
+      // Update the list of join requests
+      setJoinRequests(joinRequests.filter(request => request.id !== requestId));
+      
+      showNotification(`Request ${status === 'accept' ? 'accepted' : 'declined'} successfully`);
+      
+      // If the activity is selected, refresh the joined users list
+      if (selectedActivity) {
+        fetchJoinedUsers(selectedActivity.id);
+      }
+      
+    } catch (err) {
+      console.error(`Error ${status}ing join request:`, err);
+      showNotification(`Failed to ${status} the request. Please try again.`, 'error');
+    }
+  };
+  // useEffect(() => {
+  //   fetchUserActivities();
+  // }, []);
+  const handleDeleteActivity = async (activityId) => {
+    if (!window.confirm('Are you sure you want to delete this activity? This action cannot be undone.')) {
+      return;
+    }
+    
+    setIsLoading({...isLoading, deleteActivity: true});
+    try {
+      const token = sessionStorage.getItem('token');
+      if (!token) {
+        throw new Error('Authentication token not found');
+      }
+      
+      await axios.delete(
+        `https://rrn24.techchantier.site/malingo/public/api/activity/${activityId}`,
+        {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          }
+        }
+      );
+      
+      // Remove the activity from the list
+      setActivities(activities.filter(activity => activity.id !== activityId));
+      
+      // Close the modal if the activity is currently selected
+      if (selectedActivity && selectedActivity.id === activityId) {
+        setSelectedActivity(null);
+      }
+      
+      showNotification('Activity deleted successfully');
+    } catch (err) {
+      console.error('Error deleting activity:', err);
+      showNotification('Failed to delete the activity. Please try again.', 'error');
+    } finally {
+      setIsLoading({...isLoading, deleteActivity: false});
+    }
+  };
+  const handleEditActivity = (activity) => {
+    setEditFormData({
+      id: activity.id,
+      title: activity.title || '',
+      description: activity.description || '',
+      location: activity.location || '',
+      date: activity.date || '',
+      time: activity.time || '',
+      // category: activity.category || '',
+      // Add other fields as needed
+    });
+    setIsEditMode(true);
+  };
+  
+  const handleEditFormChange = (e) => {
+    const { name, value } = e.target;
+    setEditFormData({
+      ...editFormData,
+      [name]: value
+    });
+  };
+  const formatToDateTime = (dateTimeStr) => {
+    const date = new Date(dateTimeStr);
+    const yyyy = date.getFullYear();
+    const mm = String(date.getMonth() + 1).padStart(2, '0');
+    const dd = String(date.getDate()).padStart(2, '0');
+    const hh = String(date.getHours()).padStart(2, '0');
+    const min = String(date.getMinutes()).padStart(2, '0');
+    const ss = String(date.getSeconds()).padStart(2, '0');
+    return `${yyyy}-${mm}-${dd} ${hh}:${min}:${ss}`;
+  };
+  
+  const handleEditFormSubmit = async (e) => {
+    e.preventDefault();
+    setIsLoading({...isLoading, editActivity: true});
+  
+    try {
+      const token = sessionStorage.getItem('token');
+      if (!token) {
+        throw new Error('Authentication token not found');
+      }
+  
+      const dateParts = editFormData.date.split('/');
+      const formattedDateTime = (dateTimeString) => {
+        if (!dateTimeString) return "";
+      
+        const date = new Date(dateTimeString);
+      
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, "0");
+        const day = String(date.getDate()).padStart(2, "0");
+        const hours = String(date.getHours()).padStart(2, "0");
+        const minutes = String(date.getMinutes()).padStart(2, "0");
+        const seconds = "00"; // Seconds addition
+      
+        return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+      };
+      
+      const formattedFormData = {
+        id: editFormData.id,
+        title: editFormData.title,
+        description: editFormData.description,
+        location: editFormData.location,
+        // Include these required fields from the API
+        // ActivityPhoto: editFormData.ActivityPhoto || "", // Add this field
+        // link: editFormData.link || "", // Add this field
+        // numberOfMembers: editFormData.numberOfMembers || 0, // Add this field
+        time: formattedDateTime // Combine date and time into one field
+      };
+  
+      const response = await axios.put(
+        `https://rrn24.techchantier.site/malingo/public/api/activity/${editFormData.id}`,
+        formattedFormData,
+        {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          }
+        }
+      );
+  
+      const updatedActivities = activities.map(activity =>
+        activity.id === editFormData.id ? { ...activity, ...response.data.data } : activity
+      );
+      setActivities(updatedActivities);
+  
+      if (selectedActivity && selectedActivity.id === editFormData.id) {
+        setSelectedActivity({ ...selectedActivity, ...response.data.data });
+      }
+  
+      setIsEditMode(false);
+      showNotification('Activity updated successfully');
+    } catch (err) {
+      console.error('Error updating activity:', err);
+      showNotification('Failed to update the activity. Please try again.', 'error');
+    } finally {
+      setIsLoading({...isLoading, editActivity: false});
+    }
+  };
+  
   // Hide notification after 3 seconds
   useEffect(() => {
     if (notification.show) {
@@ -57,34 +299,31 @@ const MyActivities = () => {
     });
   };
 
-  const fetchUserActivities = async () => {
+  // const fetchUserActivities = async () => {
+  //   setLoading(true);
+  //   try {
+  //     // Fetch activities without authentication token
+  //     const response = await axios.get(
+  //       'https://rrn24.techchantier.site/malingo/public/api/activity'
+  //     );
+  //     setActivities(response.data.data || []);
+  //     setError(null);
+  //   } catch (err) {
+  //     console.error('Error fetching activities:', err);
+  //     setError('Failed to load activities. Please try again later.');
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+  
+  useEffect(() => {
     setLoading(true);
-    try {
-      const token = sessionStorage.getItem('token');
-      if (!token) {
-        throw new Error('Authentication token not found');
-      }
-
-      const response = await axios.get(
-        'https://rrn24.techchantier.site/malingo/public/api/activities/user',
-        {
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-          }
-        }
-      );
-
-      setActivities(response.data.data || []);
-      setError(null);
-    } catch (err) {
-      console.error('Error fetching activities:', err);
-      setError('Failed to load your activities. Please try again later.');
-    } finally {
+    fetch('https://rrn24.techchantier.site/malingo/public/api/activity')
+      .then(response => response.json())
+      .then(data => setActivities(data))
+      .catch(error => console.error('Error fetching activities:', error));
       setLoading(false);
-    }
-  };
+  }, []);
 
   const handleQuitActivity = async (activityId) => {
     try {
@@ -92,9 +331,8 @@ const MyActivities = () => {
       if (!token) {
         throw new Error('Authentication token not found');
       }
-
       await axios.post(
-        `https://rrn24.techchantier.site/malingo/public/api/activities/${activityId}/leave`,
+        `https://rrn24.techchantier.site/malingo/public/api/activity/${activityId}/leave`,
         {},
         {
           headers: {
@@ -169,7 +407,7 @@ const MyActivities = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.3 }}
           >
-            Here you can view and manage all the activities you've joined on Malingo.
+            Here you can view and manage all the activities you've joined and created on Malingo.
           </motion.p>
         </div>
       </motion.div>
@@ -290,7 +528,7 @@ const MyActivities = () => {
                       <MapPin size={16} className="mr-1" /> {activity.location || "Location not specified"}
                     </div>
                     <div className="flex items-center text-sm text-gray-500 mb-1">
-                      <Calendar size={16} className="mr-1" /> {activity.date ? formatDate(activity.date) : 'Date not specified'} {activity.time && `at ${activity.time}`}
+                      <Calendar size={16} className="mr-1" /> {activity.time && `at ${activity.time}`}
                     </div>
                     <div className="flex items-center text-sm text-gray-500 mb-3">
                       <Users size={16} className="mr-1" /> {activity.numberOfMembers || "0"} members
@@ -308,7 +546,48 @@ const MyActivities = () => {
                         >
                           View Details
                         </Button>
+                        <div className="flex gap-2 mt-2">
+  <motion.div
+    whileHover={{ scale: 1.03 }}
+    whileTap={{ scale: 0.97 }}
+    className="flex-1"
+  >
+    <Button
+      variant="outline"
+      className="w-full"
+      style={{ borderColor: colors.primary, color: colors.primary }}
+      onClick={() => handleEditActivity(activity)}
+    >
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-1">
+        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+      </svg>
+      Edit
+    </Button>
+  </motion.div>
+  <motion.div
+    whileHover={{ scale: 1.03 }}
+    whileTap={{ scale: 0.97 }}
+  >
+    <Button
+      variant="outline"
+      style={{ borderColor: '#f44336', color: '#f44336' }}
+      onClick={() => handleDeleteActivity(activity.id)}
+      disabled={isLoading.deleteActivity}
+    >
+      {isLoading.deleteActivity ? (
+        <Loader className="h-4 w-4 animate-spin" />
+      ) : (
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <polyline points="3 6 5 6 21 6"></polyline>
+          <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+        </svg>
+      )}
+    </Button>
+  </motion.div>
+</div>
                       </motion.div>
+
                       <motion.div
                         whileHover={{ scale: 1.03 }}
                         whileTap={{ scale: 0.97 }}
@@ -439,7 +718,7 @@ const MyActivities = () => {
                         style={{ color: colors.primary }}
                         className="mr-1"
                       />
-                      {selectedActivity.date ? formatDate(selectedActivity.date) : 'Date not specified'} 
+                      {selectedActivity.date } 
                       {selectedActivity.time && ` at ${selectedActivity.time}`}
                     </motion.div>
                     <motion.div
@@ -474,7 +753,140 @@ const MyActivities = () => {
                   >
                     {selectedActivity.description || "No description available."}
                   </motion.p>
-
+                  <div className="flex flex-wrap gap-3 mb-4">
+  <motion.button
+    className="flex items-center text-sm px-3 py-1 rounded-md"
+    style={{ backgroundColor: colors.accent, color: colors.text }}
+    whileHover={{ scale: 1.05 }}
+    whileTap={{ scale: 0.95 }}
+    onClick={() => fetchJoinedUsers(selectedActivity.id)}
+  >
+    <Users size={16} className="mr-1" />
+    View Joined Users
+    {isLoading.joinedUsers && <Loader className="ml-2 h-3 w-3 animate-spin" />}
+  </motion.button>
+  
+  <motion.button
+    className="flex items-center text-sm px-3 py-1 rounded-md"
+    style={{ backgroundColor: colors.accent, color: colors.text }}
+    whileHover={{ scale: 1.05 }}
+    whileTap={{ scale: 0.95 }}
+    onClick={() => fetchJoinRequests(selectedActivity.id)}
+  >
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-1">
+      <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+      <circle cx="8.5" cy="7" r="4"></circle>
+      <line x1="20" y1="8" x2="20" y2="14"></line>
+      <line x1="23" y1="11" x2="17" y2="11"></line>
+    </svg>
+    Join Requests
+    {isLoading.joinRequests && <Loader className="ml-2 h-3 w-3 animate-spin" />}
+  </motion.button>
+</div>
+{showJoinedUsers && (
+  <motion.div
+    className="mt-4 border rounded-lg p-4"
+    initial={{ opacity: 0, height: 0 }}
+    animate={{ opacity: 1, height: 'auto' }}
+    exit={{ opacity: 0, height: 0 }}
+  >
+    <div className="flex justify-between items-center mb-3">
+      <h4 className="font-medium" style={{ color: colors.text }}>Joined Users</h4>
+      <motion.button
+        onClick={() => setShowJoinedUsers(false)}
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.9 }}
+        className="text-gray-500"
+      >
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </motion.button>
+    </div>
+    
+    {joinedUsers.length === 0 ? (
+      <p className="text-gray-500 text-sm">No users have joined this activity yet.</p>
+    ) : (
+      <div className="max-h-48 overflow-y-auto">
+        {joinedUsers.map(user => (
+          <div key={user.id} className="flex items-center py-2 border-b last:border-b-0">
+            <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center mr-3">
+              {user.name ? user.name.charAt(0).toUpperCase() : "U"}
+            </div>
+            <div>
+              <p className="font-medium">{user.name || "Anonymous"}</p>
+              <p className="text-xs text-gray-500">{user.email || "No email provided"}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    )}
+  </motion.div>
+)}
+{showJoinRequests && (
+  <motion.div
+    className="mt-4 border rounded-lg p-4"
+    initial={{ opacity: 0, height: 0 }}
+    animate={{ opacity: 1, height: 'auto' }}
+    exit={{ opacity: 0, height: 0 }}
+  >
+    <div className="flex justify-between items-center mb-3">
+      <h4 className="font-medium" style={{ color: colors.text }}>Join Requests</h4>
+      <motion.button
+        onClick={() => setShowJoinRequests(false)}
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.9 }}
+        className="text-gray-500"
+      >
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </motion.button>
+    </div>
+    
+    {joinRequests.length === 0 ? (
+      <p className="text-gray-500 text-sm">No pending join requests.</p>
+    ) : (
+      <div className="max-h-48 overflow-y-auto">
+        {joinRequests.map(request => (
+          <div key={request.id} className="flex items-center justify-between py-2 border-b last:border-b-0">
+            <div className="flex items-center">
+              <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center mr-3">
+                {request.user.name ? request.user.name.charAt(0).toUpperCase() : "U"}
+              </div>
+              <div>
+                <p className="font-medium">{request.user.name || "Anonymous"}</p>
+                <p className="text-xs text-gray-500">{request.user.email || "No email provided"}</p>
+              </div>
+            </div>
+            <div className="flex gap-2">
+              <motion.button
+                onClick={() => handleJoinRequest(request.id, 'accept')}
+                className="px-3 py-1 rounded-md text-xs font-medium text-white"
+                style={{ backgroundColor: '#4CAF50' }}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                Accept
+              </motion.button>
+              <motion.button
+                onClick={() => handleJoinRequest(request.id, 'decline')}
+                className="px-3 py-1 rounded-md text-xs font-medium text-white"
+                style={{ backgroundColor: '#F44336' }}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                Decline
+              </motion.button>
+            </div>
+          </div>
+        ))}
+      </div>
+    )}
+  </motion.div>
+)}
                   {selectedActivity.link && (
                     <motion.div
                       className="mb-4"
@@ -526,6 +938,151 @@ const MyActivities = () => {
           </motion.div>
         </motion.div>
       )}
+      {/* Edit Activity Modal */}
+{isEditMode && (
+  <motion.div
+    className="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center p-4 z-50"
+    initial={{ opacity: 0 }}
+    animate={{ opacity: 1 }}
+    exit={{ opacity: 0 }}
+    onClick={(e) => {
+      // Close modal when clicking outside
+      if (e.target === e.currentTarget) {
+        setIsEditMode(false);
+      }
+    }}
+  >
+    <motion.div
+      className="bg-white rounded-lg shadow-xl w-full max-w-lg overflow-hidden relative"
+      initial={{ scale: 0.8, opacity: 0, y: 20 }}
+      animate={{ scale: 1, opacity: 1, y: 0 }}
+      transition={{
+        type: "spring",
+        damping: 25,
+        stiffness: 300,
+      }}
+    >
+      <motion.button
+        onClick={() => setIsEditMode(false)}
+        className="absolute top-4 right-4 z-10 bg-white rounded-full p-2 shadow-md"
+        whileHover={{
+          scale: 1.1,
+          rotate: 90,
+          backgroundColor: "#f8f8f8",
+        }}
+        whileTap={{ scale: 0.9 }}
+      >
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </motion.button>
+
+      <div className="p-6">
+        <h3 className="text-2xl font-bold mb-4" style={{ color: colors.text }}>
+          Edit Activity
+        </h3>
+        
+        <form onSubmit={handleEditFormSubmit}>
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Title
+              </label>
+              <input
+                type="text"
+                name="title"
+                value={editFormData.title}
+                onChange={handleEditFormChange}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                required
+              />
+            </div>
+            
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Description
+              </label>
+              <textarea
+                name="description"
+                value={editFormData.description}
+                onChange={handleEditFormChange}
+                rows="4"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+            
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Location
+              </label>
+              <input
+                type="text"
+                name="location"
+                value={editFormData.location}
+                onChange={handleEditFormChange}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+            
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Date
+                </label>
+                <input
+                  type="date"
+                  name="date"
+                  value={editFormData.date}
+                  onChange={handleEditFormChange}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Time
+                </label>
+                <input
+                  type="time"
+                  name="time"
+                  value={editFormData.time}
+                  onChange={handleEditFormChange}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+            </div>
+            
+           
+            
+            <div className="flex gap-4 pt-4">
+              <Button
+                type="button"
+                variant="outline"
+                className="flex-1"
+                onClick={() => setIsEditMode(false)}
+              >
+                Cancel
+              </Button>
+              
+              <Button
+                type="submit"
+                className="flex-1"
+                style={{ backgroundColor: colors.primary, color: "white" }}
+                disabled={isLoading.editActivity}
+              >
+                {isLoading.editActivity ? (
+                  <Loader className="h-5 w-5 animate-spin mr-2" />
+                ) : null}
+                Save Changes
+              </Button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </motion.div>
+  </motion.div>
+)}
     </div>
   );
 };
